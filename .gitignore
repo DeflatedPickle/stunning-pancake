@@ -34,3 +34,17 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+# Other files
+*/Assets/Plugins
+*/Assets/Plugins.meta
+*/Assets/Gizmos*
+*/Logs
