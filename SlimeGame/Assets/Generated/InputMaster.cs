@@ -40,17 +40,6 @@ public class InputMaster : IInputActionCollection
                     ""processors"": """",
                     ""interactions"": """",
                     ""bindings"": []
-                },
-                {
-                    ""name"": ""Rotation"",
-                    ""id"": ""13651c29-d0b3-4973-b364-fe3b727e4d0c"",
-                    ""expectedControlLayout"": """",
-                    ""continuous"": false,
-                    ""passThrough"": false,
-                    ""initialStateCheck"": false,
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""bindings"": []
                 }
             ],
             ""bindings"": [
@@ -68,8 +57,8 @@ public class InputMaster : IInputActionCollection
                 },
                 {
                     ""name"": ""WASD"",
-                    ""id"": ""5814d6c9-af05-4616-a619-0fafae834ac1"",
-                    ""path"": ""1DAxis"",
+                    ""id"": ""6b4ee882-31da-4b8e-83ae-32390ea7dd8a"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -79,8 +68,8 @@ public class InputMaster : IInputActionCollection
                     ""modifiers"": """"
                 },
                 {
-                    ""name"": ""negative"",
-                    ""id"": ""dc6954d6-ee6e-49ad-80d5-4c97f12e4a19"",
+                    ""name"": ""up"",
+                    ""id"": ""8ac16594-9cab-44cb-b3d0-20f25a32a01b"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
@@ -91,8 +80,8 @@ public class InputMaster : IInputActionCollection
                     ""modifiers"": """"
                 },
                 {
-                    ""name"": ""positive"",
-                    ""id"": ""b856bbc1-fbd6-4af1-83fd-555cad798c9a"",
+                    ""name"": ""down"",
+                    ""id"": ""33844710-81f4-46e2-af6e-9232e75fe330"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
@@ -103,37 +92,25 @@ public class InputMaster : IInputActionCollection
                     ""modifiers"": """"
                 },
                 {
-                    ""name"": ""AD"",
-                    ""id"": ""7b118f5f-f39e-4aa2-8d0e-eb2d7b1f8e7a"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Rotation"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""490fc046-73d8-4126-a995-d3ac3d3d13f4"",
+                    ""name"": ""left"",
+                    ""id"": ""8db0353c-4707-452f-b33f-bde30cf4d690"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
                     ""groups"": "";Keyboard and Mouse"",
-                    ""action"": ""Rotation"",
+                    ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true,
                     ""modifiers"": """"
                 },
                 {
-                    ""name"": ""positive"",
-                    ""id"": ""a4e42ecd-30a3-4c9b-b639-e56c0daaded4"",
+                    ""name"": ""right"",
+                    ""id"": ""ad108e99-f4c4-4756-a9e3-23d30310a157"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
                     ""groups"": "";Keyboard and Mouse"",
-                    ""action"": ""Rotation"",
+                    ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true,
                     ""modifiers"": """"
@@ -177,7 +154,6 @@ public class InputMaster : IInputActionCollection
         m_Player = asset.GetActionMap("Player");
         m_Player_Jump = m_Player.GetAction("Jump");
         m_Player_Movement = m_Player.GetAction("Movement");
-        m_Player_Rotation = m_Player.GetAction("Rotation");
     }
 
     ~InputMaster()
@@ -232,14 +208,12 @@ public class InputMaster : IInputActionCollection
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private InputAction m_Player_Jump;
     private InputAction m_Player_Movement;
-    private InputAction m_Player_Rotation;
     public struct PlayerActions
     {
         private InputMaster m_Wrapper;
         public PlayerActions(InputMaster wrapper) { m_Wrapper = wrapper; }
         public InputAction @Jump { get { return m_Wrapper.m_Player_Jump; } }
         public InputAction @Movement { get { return m_Wrapper.m_Player_Movement; } }
-        public InputAction @Rotation { get { return m_Wrapper.m_Player_Rotation; } }
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -256,9 +230,6 @@ public class InputMaster : IInputActionCollection
                 Movement.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                 Movement.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                 Movement.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
-                Rotation.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotation;
-                Rotation.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotation;
-                Rotation.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotation;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -269,9 +240,6 @@ public class InputMaster : IInputActionCollection
                 Movement.started += instance.OnMovement;
                 Movement.performed += instance.OnMovement;
                 Movement.canceled += instance.OnMovement;
-                Rotation.started += instance.OnRotation;
-                Rotation.performed += instance.OnRotation;
-                Rotation.canceled += instance.OnRotation;
             }
         }
     }
@@ -304,6 +272,5 @@ public class InputMaster : IInputActionCollection
     {
         void OnJump(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
-        void OnRotation(InputAction.CallbackContext context);
     }
 }
