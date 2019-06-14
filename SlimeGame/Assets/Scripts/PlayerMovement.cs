@@ -4,18 +4,19 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour {
     public LayerMask GroundLayerMask;
-    public float GroundSphere = 0.3f;
+    public Vector3 GroundSphereOffset = new Vector3(0, 0.5f, 0);
+    public float GroundSphere = 0.4f;
     public bool IsOnGround;
     
     public float JumpForce = 4;
     public float JumpForceHeld = 8;
-    public float JumpTimeTotal = 20f;
-    public float JumpTimeCurrent;
+    public Timer JumpTimer = new Timer();
 
     private InputMaster _inputMaster;
     private Rigidbody _rigidbody;
 
     private bool _pressedJump;
+    private Vector2 _movementDirection;
 
     private void Awake() {
         _inputMaster = new InputMaster();
@@ -27,18 +28,22 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        IsOnGround = Physics.CheckSphere(transform.position, GroundSphere, GroundLayerMask);
+        IsOnGround = Physics.CheckSphere(transform.position - GroundSphereOffset, GroundSphere, GroundLayerMask);
         
         if (_pressedJump) {
             if (IsOnGround) {
                 _rigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
-                JumpTimeCurrent = JumpTimeTotal;
+                JumpTimer.Reset();
             }
 
-            if (_rigidbody.velocity.y > 1 && JumpTimeCurrent > 0) {
+            if (_rigidbody.velocity.y > 1 && JumpTimer.Current > 0) {
                 _rigidbody.AddForce(Vector3.up * JumpForceHeld, ForceMode.Impulse);
-                JumpTimeCurrent -= 1;
+                JumpTimer.Tick();
             }
+        }
+
+        if (IsOnGround) {
+            _rigidbody.AddForce(new Vector3());
         }
     }
 
@@ -59,6 +64,8 @@ public class PlayerMovement : MonoBehaviour {
     private void Move(InputAction.CallbackContext ctx) {
         var direction = ctx.ReadValue<Vector2>();
         Debug.Log("Moved by: " + direction);
+
+        _movementDirection = direction;
     }
 
     private void OnEnable() {
@@ -67,5 +74,10 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnDisable() {
         _inputMaster.Disable();
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position - GroundSphereOffset, GroundSphere);
     }
 }
