@@ -294,6 +294,57 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1102035192
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1102035194}
+  - component: {fileID: 1102035193}
+  m_Layer: 0
+  m_Name: JarTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1102035193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102035192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b658d04e49299d6449b88539d9cb88e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  copyPositionX: 1
+  copyPositionY: 1
+  copyPositionZ: 1
+  copyRotationX: 0
+  copyRotationY: 0
+  copyRotationZ: 1
+  copyRotationW: 0
+  parent: {fileID: 1713589220}
+--- !u!4 &1102035194
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102035192}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1265933081
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -340,22 +391,22 @@ PrefabInstance:
     - target: {fileID: 6867101746996131793, guid: 277d5cc1bdb1a814a802f3df25bd0c4a,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6867101746996131793, guid: 277d5cc1bdb1a814a802f3df25bd0c4a,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6867101746996131793, guid: 277d5cc1bdb1a814a802f3df25bd0c4a,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6867101746996131793, guid: 277d5cc1bdb1a814a802f3df25bd0c4a,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6867101746996131793, guid: 277d5cc1bdb1a814a802f3df25bd0c4a,
         type: 3}
@@ -375,7 +426,7 @@ PrefabInstance:
     - target: {fileID: 6867101746996131793, guid: 277d5cc1bdb1a814a802f3df25bd0c4a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 6867101747249210183, guid: 277d5cc1bdb1a814a802f3df25bd0c4a,
         type: 3}
@@ -501,7 +552,7 @@ Transform:
   m_GameObject: {fileID: 1422523916}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 4, y: 1, z: 4}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -524,12 +575,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4400597daef7eab448c59e555e07424c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GroundLayerMask:
-    serializedVersion: 2
-    m_Bits: 1024
-  GroundSphere: 0.7
-  IsOnGround: 0
-  JumpForce: 1
-  JumpForceHeld: 0.2
-  JumpTimeTotal: 6
-  JumpTimeCurrent: 0.4
+  Target: {fileID: 1102035194}
+  Ground:
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 1024
+    SphereOffset: {x: 0, y: 0.5, z: 0}
+    Sphere: 0.4
+    IsOnGround: 0
+  Jump:
+    Force: 1
+    ForceHeld: 0.01
+    Timer:
+      Total: 6
+      _current: 0
+    IsJumping: 0
+  Movement:
+    Force: 4
+    Direction: 0
+    IsMoving: 0
+  Rotation:
+    Amount: 4
+    Direction: 0
+    IsRotating: 0

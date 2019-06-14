@@ -40,6 +40,17 @@ public class InputMaster : IInputActionCollection
                     ""processors"": """",
                     ""interactions"": """",
                     ""bindings"": []
+                },
+                {
+                    ""name"": ""Rotation"",
+                    ""id"": ""13651c29-d0b3-4973-b364-fe3b727e4d0c"",
+                    ""expectedControlLayout"": """",
+                    ""continuous"": false,
+                    ""passThrough"": false,
+                    ""initialStateCheck"": false,
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""bindings"": []
                 }
             ],
             ""bindings"": [
@@ -57,8 +68,8 @@ public class InputMaster : IInputActionCollection
                 },
                 {
                     ""name"": ""WASD"",
-                    ""id"": ""f672d927-2d35-4dae-8dfe-3b84f1eac110"",
-                    ""path"": ""2DVector"",
+                    ""id"": ""5814d6c9-af05-4616-a619-0fafae834ac1"",
+                    ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -68,49 +79,61 @@ public class InputMaster : IInputActionCollection
                     ""modifiers"": """"
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""16a147ab-d323-4682-9fa8-ff16f0003aed"",
+                    ""name"": ""negative"",
+                    ""id"": ""dc6954d6-ee6e-49ad-80d5-4c97f12e4a19"",
                     ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
-                    ""groups"": ""GamePad;Keyboard and Mouse"",
+                    ""groups"": "";Keyboard and Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true,
                     ""modifiers"": """"
                 },
                 {
-                    ""name"": ""down"",
-                    ""id"": ""9f1bff9f-a774-438a-b2d1-f6f666a48fdb"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""GamePad;Keyboard and Mouse"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""a2c8b9e0-4e10-43e2-9316-9ee54126ddbd"",
+                    ""name"": ""positive"",
+                    ""id"": ""b856bbc1-fbd6-4af1-83fd-555cad798c9a"",
                     ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
-                    ""groups"": ""GamePad;Keyboard and Mouse"",
+                    ""groups"": "";Keyboard and Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true,
                     ""modifiers"": """"
                 },
                 {
-                    ""name"": ""right"",
-                    ""id"": ""e6e80871-f3a7-442e-94a5-203d90446764"",
-                    ""path"": ""<Keyboard>/d"",
+                    ""name"": ""AD"",
+                    ""id"": ""7b118f5f-f39e-4aa2-8d0e-eb2d7b1f8e7a"",
+                    ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""GamePad;Keyboard and Mouse"",
-                    ""action"": ""Movement"",
+                    ""groups"": """",
+                    ""action"": ""Rotation"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""490fc046-73d8-4126-a995-d3ac3d3d13f4"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard and Mouse"",
+                    ""action"": ""Rotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""a4e42ecd-30a3-4c9b-b639-e56c0daaded4"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard and Mouse"",
+                    ""action"": ""Rotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true,
                     ""modifiers"": """"
@@ -154,6 +177,7 @@ public class InputMaster : IInputActionCollection
         m_Player = asset.GetActionMap("Player");
         m_Player_Jump = m_Player.GetAction("Jump");
         m_Player_Movement = m_Player.GetAction("Movement");
+        m_Player_Rotation = m_Player.GetAction("Rotation");
     }
 
     ~InputMaster()
@@ -208,12 +232,14 @@ public class InputMaster : IInputActionCollection
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private InputAction m_Player_Jump;
     private InputAction m_Player_Movement;
+    private InputAction m_Player_Rotation;
     public struct PlayerActions
     {
         private InputMaster m_Wrapper;
         public PlayerActions(InputMaster wrapper) { m_Wrapper = wrapper; }
         public InputAction @Jump { get { return m_Wrapper.m_Player_Jump; } }
         public InputAction @Movement { get { return m_Wrapper.m_Player_Movement; } }
+        public InputAction @Rotation { get { return m_Wrapper.m_Player_Rotation; } }
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -230,6 +256,9 @@ public class InputMaster : IInputActionCollection
                 Movement.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                 Movement.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                 Movement.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
+                Rotation.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotation;
+                Rotation.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotation;
+                Rotation.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotation;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -240,6 +269,9 @@ public class InputMaster : IInputActionCollection
                 Movement.started += instance.OnMovement;
                 Movement.performed += instance.OnMovement;
                 Movement.canceled += instance.OnMovement;
+                Rotation.started += instance.OnRotation;
+                Rotation.performed += instance.OnRotation;
+                Rotation.canceled += instance.OnRotation;
             }
         }
     }
@@ -272,5 +304,6 @@ public class InputMaster : IInputActionCollection
     {
         void OnJump(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
+        void OnRotation(InputAction.CallbackContext context);
     }
 }
